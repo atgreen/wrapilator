@@ -25,6 +25,9 @@ Wrapilator has been tested on sbcl, and requires quicklisp.  Run
 Wrapilator was written by Anthony Green.
 
 email    : green@moxielogic.com
-linkedin : http://linked.in/a/green
-twitter  : @antgreen
+
+linkedin : http://linkedin.com/in/green
+
+twitter  : [@antgreen](https://twitter.com/antgreen)
+
 
