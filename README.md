@@ -6,8 +6,10 @@ in Common Lisp.
 
 ## Installation
 
-Wrapilator has been tested on sbcl, and requires quicklisp.  Run
-`make` to generate a binary executable for wrapilator.
+Wrapilator has been tested on [sbcl](https://sbcl.org), and I strongly
+recommend the use of [quicklisp](https://www.quicklisp.org) to
+download dependencies.  Run `make` to generate a binary executable for
+wrapilator.
 
 ## Usage
 
