@@ -17,7 +17,6 @@
 (defvar *Makefile-template* (read-file-into-string "Makefile.clt"))
 (defvar *wrapper.c-template* (read-file-into-string "wrapper.c.clt"))
 (defvar *package.lisp-template* (read-file-into-string  "package.lisp.clt"))
-(defvar *template.asd-template* (read-file-into-string  "template.asd.clt"))
 
 (opts:define-opts
   (:name :help
@@ -40,6 +39,12 @@
      (when it
        ,@body)))
 
+(defun abspath
+       (path-string)
+   (uiop:unix-namestring
+    (uiop:merge-pathnames*
+     (uiop:parse-unix-namestring path-string))))
+
 (defun usage ()
   (opts:describe
    :prefix "wrapilator - copyright (C) 2017 Anthony Green <green@moxielogic.com>"
@@ -53,29 +58,22 @@
     (if (not (com.gigamonkeys.pathnames:file-exists-p header))
 	(format t "fatal: verilator output header file ~A does not exist~%" header)
 	(progn
-	  (ensure-directories-exist (format nil "~A/verilated-~A/" *directory* module-name))
 	  (with-open-file (stream (format nil "~A/Makefile.wrap" *directory*)
 				  :direction :output
 				  :if-exists :supersede
 				  :if-does-not-exist :create)
 	    (format stream (funcall (cl-template:compile-template *Makefile-template*)
 				    (list :module-name module-name))))
-	  (with-open-file (stream (format nil "~A/verilated-~A/verilated-~A.asd" *directory* module-name module-name)
-				  :direction :output
-				  :if-exists :supersede
-				  :if-does-not-exist :create)
-	    (format stream (funcall (cl-template:compile-template *template.asd-template*)
-				    (list :module-name module-name))))
 	  (let ((input-lines (inferior-shell:run/lines
 			      (format nil "grep -h VL_IN ~A" header)))
 		(output-lines (inferior-shell:run/lines
 			      (format nil "grep -h VL_OUT ~A" header))))
-	    (with-open-file (stream (format nil "~A/verilated-~A/package.lisp" *directory* module-name)
+	    (with-open-file (stream (format nil "~A/verilated-~A.lisp" *directory* module-name)
 				    :direction :output
 				    :if-exists :supersede
 				    :if-does-not-exist :create)
 	      (format stream (funcall (cl-template:compile-template *package.lisp-template*)
-				      (list :module-name module-name :directory *directory* :input-lines input-lines :output-lines output-lines))))
+				      (list :module-name module-name :directory (abspath *directory*) :input-lines input-lines :output-lines output-lines))))
 	    (with-open-file (stream (format nil "~A/wrapper.c" *directory*)
 				    :direction :output
 				    :if-exists :supersede
