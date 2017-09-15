@@ -26,10 +26,8 @@ wrapilator.
 
 Wrapilator was written by Anthony Green.
 
-email    : green@moxielogic.com
-
-linkedin : http://linkedin.com/in/green
-
-twitter  : [@antgreen](https://twitter.com/antgreen)
+* email    : green@moxielogic.com
+* linkedin : http://linkedin.com/in/green
+* twitter  : [@antgreen](https://twitter.com/antgreen)
 
 
