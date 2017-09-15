@@ -1,0 +1,22 @@
+;;; verilated-<%= @ module-name %>
+;;;
+;;; created on <%= (local-time:format-timestring nil (local-time:now) :format local-time:+asctime-format+) %> by wrapilator.
+
+(defpackage #:verilated-<%= @ module-name %>
+  (:use #:cl #:cffi)
+  (:export <%= @ module-name %>-new
+	   <%= @ module-name %>-eval <% (loop for line in (@ input-lines) do %>
+	   <%= @ module-name %>-set-<%= (substitute #\- #\_ (cadr (cl-ppcre:split "[\\(,]" line))) %><% ) %><% (loop for line in (@ output-lines) do %>
+	   <%= @ module-name %>-get-<%= (substitute #\- #\_ (cadr (cl-ppcre:split "[\\(,]" line))) %><% ) %>))
+
+(in-package #:verilated-<%= @ module-name %>)
+
+(define-foreign-library lib<%= @ module-name %>
+  (t (:default "<%= @ directory %>/lib<%= @ module-name %>")))
+
+(use-foreign-library lib<%= @ module-name %>)
+
+(defcfun "<%= @ module-name %>_new" :pointer)
+(defcfun "<%= @ module-name %>_eval" :void (c :pointer)) <% (loop for line in (@ input-lines) do %>
+(defcfun "<%= @ module-name %>_set_<%= (cadr (cl-ppcre:split "[\\(,]" line)) %>" :void (obj :pointer) (val :uint)) <% ) %> <% (loop for line in (@ output-lines) do %>
+(defcfun "<%= @ module-name %>_get_<%= (cadr (cl-ppcre:split "[\\(,]" line)) %>" :uint (obj :pointer)) <% ) %>

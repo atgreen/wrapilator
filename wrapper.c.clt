@@ -1,0 +1,50 @@
+#define MODULE <%= @ module-name %>
+#include "V<%= @ module-name %>.h"
+
+#include <stdio.h>
+#include <verilated.cpp>
+#include <verilated_vcd_c.cpp>
+#include <verilated_vcd_c.h>
+
+#define CAT(a, ...) PRIMITIVE_CAT(a, __VA_ARGS__)
+#define PRIMITIVE_CAT(a, ...) a ## __VA_ARGS__
+
+extern "C" {
+void * CAT(MODULE,_new) ()
+{
+  return new CAT(V,MODULE)();
+}
+
+void CAT(MODULE,_eval) (void *obj)
+{
+  ((CAT(V,MODULE) *)obj)->eval();
+}
+
+#undef VL_IN
+#undef VL_IN8
+#undef VL_IN16
+#undef VL_OUT
+#undef VL_OUT8
+#undef VL_OUT16
+
+#define VL_IN(NAME,x,y)				     \
+  void CAT(CAT(MODULE,_set), CAT(_,NAME)) (void *obj, unsigned value)	\
+  { \
+    ((CAT(V,MODULE) *)obj)->NAME = value;	\
+  }
+#define VL_IN8 VL_IN
+#define VL_IN16 VL_IN
+
+#define VL_OUT(NAME,x,y)				     \
+  unsigned CAT(CAT(MODULE,_get), CAT(_,NAME)) (void *obj)	\
+  { \
+    return ((CAT(V,MODULE) *)obj)->NAME;	\
+  }
+#define VL_OUT8 VL_OUT
+#define VL_OUT16 VL_OUT
+
+  <% (loop for line in (@ input-lines) do %>
+      <%= line %> <% ) %>
+  <% (loop for line in (@ output-lines) do %>
+      <%= line %> <% ) %>
+}
