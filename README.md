@@ -34,7 +34,7 @@ be found at
 https://raw.githubusercontent.com/atgreen/moxie-cores/master/bench/test.lisp.
 This is test code for the mox125 core's insruction cache.  The
 Makefile for invoking verilator and wrapilator are found here:
-https://raw.githubusercontent.com/atgreen/moxie-cores/master/bench/Makefile.
+https://github.com/atgreen/moxie-cores/blob/master/bench/Makefile.
 
 ## Author
 
