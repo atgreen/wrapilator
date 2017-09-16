@@ -8,12 +8,12 @@ Lisp package that talks to those stubs via [CFFI](https://common-lisp.net/projec
 
 ## Installation
 
-Wrapilator has been tested on [sbcl](http://sbcl.org), and I strongly
-recommend the use of [quicklisp](https://www.quicklisp.org) to
-download dependencies.  Run `make` to generate a binary executable for
-wrapilator.  The build process requires the
-[`buildapp`](https://www.xach.com/lisp/buildapp/) program from
-quicklisp.
+Wrapilator has been developed and tested with [sbcl](http://sbcl.org)
+on Linux ([Fedora](https://getfedora.org)), and requires the use of
+[quicklisp](https://www.quicklisp.org) to download dependencies.  Run
+`make` to generate a binary executable for wrapilator.  The build
+process requires the [`buildapp`](https://www.xach.com/lisp/buildapp/)
+program from quicklisp.
 
 ## Usage
 
