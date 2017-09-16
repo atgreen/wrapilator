@@ -11,9 +11,10 @@ Lisp package that talks to those stubs via [CFFI](https://common-lisp.net/projec
 Wrapilator has been developed and tested with [sbcl](http://sbcl.org)
 on Linux ([Fedora](https://getfedora.org)), and requires the use of
 [quicklisp](https://www.quicklisp.org) to download dependencies.  Run
-`make` to generate a binary executable for wrapilator.  The build
-process requires the [`buildapp`](https://www.xach.com/lisp/buildapp/)
-program from quicklisp.
+`make` to generate a stand-alone binary executable for wrapilator.
+The build process requires the
+[`buildapp`](https://www.xach.com/lisp/buildapp/) program from
+quicklisp.
 
 ## Usage
 
@@ -42,5 +43,3 @@ Wrapilator was written by Anthony Green.
 * email    : green@moxielogic.com
 * linkedin : http://linkedin.com/in/green
 * twitter  : [@antgreen](https://twitter.com/antgreen)
-
-
