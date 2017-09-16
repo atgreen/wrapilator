@@ -3,6 +3,8 @@
 The wrapilator is a tool that creates a thin Common Lisp veneer over
 [verilator](https://www.veripool.org/wiki/verilator) output, allowing
 for the creation of digital logic test code in Common Lisp.
+Wrapilator creates C stubs for the C++ verilator output, and a Common
+Lisp package that talks to those stubs via [CFFI](https://common-lisp.net/project/cffi/).
 
 ## Installation
 
