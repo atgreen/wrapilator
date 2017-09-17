@@ -52,8 +52,42 @@ Run the following commands to generate everything:
     $ wrapilator counter
 
 This generates the verilator code, the Lisp wrapper, and associated
-makefiles.  Now you can build everything in the verilator output
-directory:
+makefiles.
+
+The generated lisp code looks like this:
+
+    ;;; verilated-counter.lisp
+    ;;;
+    ;;; created on Sun Sep 17 08:07:27 2017 by wrapilator.
+    
+    (ql:quickload :cffi)
+    
+    (defpackage #:verilated-counter
+      (:use #:cl #:cffi)
+      (:export #:counter-new
+    	   #:counter-eval 
+    	   #:counter-set-clk-i
+    	   #:counter-set-rst-i
+    	   #:counter-get-counter-o))
+    
+    (in-package #:verilated-counter)
+    
+    (define-foreign-library libcounter
+      (t (:default "/home/green/git/example/obj_dir/libcounter")))
+    
+    (cffi:use-foreign-library libcounter)
+    
+    (cffi:defcfun "counter_new" :pointer)
+    (cffi:defcfun "counter_eval" :void (c :pointer)) 
+    (cffi:defcfun "counter_set_clk_i" :void (obj :pointer) (val :uint)) 
+    (cffi:defcfun "counter_set_rst_i" :void (obj :pointer) (val :uint))  
+    (cffi:defcfun "counter_get_counter_o" :uint (obj :pointer)) 
+
+Note that all the getter and setter functions replace '_' with '-', as
+per the CFFI rules.  Use `counter-new` to create a new `counter`
+object, and `counter-eval` to evaluate the verilated modules.
+
+Now you can build everything in the verilator output directory:
 
     $ (cd obj_dir; make -f Makefile.wrap)
     M32=-fPIC make -f Vcounter.mk
