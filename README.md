@@ -65,23 +65,23 @@ The generated lisp code looks like this:
     (defpackage #:verilated-counter
       (:use #:cl #:cffi)
       (:export #:counter-new
-    	   #:counter-eval 
-    	   #:counter-set-clk-i
-    	   #:counter-set-rst-i
-    	   #:counter-get-counter-o))
+               #:counter-eval 
+               #:counter-set-clk-i
+               #:counter-set-rst-i
+               #:counter-get-counter-o))
     
     (in-package #:verilated-counter)
     
     (define-foreign-library libcounter
       (t (:default "/home/green/git/example/obj_dir/libcounter")))
     
-    (cffi:use-foreign-library libcounter)
+    (use-foreign-library libcounter)
     
-    (cffi:defcfun "counter_new" :pointer)
-    (cffi:defcfun "counter_eval" :void (c :pointer)) 
-    (cffi:defcfun "counter_set_clk_i" :void (obj :pointer) (val :uint)) 
-    (cffi:defcfun "counter_set_rst_i" :void (obj :pointer) (val :uint))  
-    (cffi:defcfun "counter_get_counter_o" :uint (obj :pointer)) 
+    (defcfun "counter_new" :pointer)
+    (defcfun "counter_eval" :void (c :pointer)) 
+    (defcfun "counter_set_clk_i" :void (obj :pointer) (val :uint)) 
+    (defcfun "counter_set_rst_i" :void (obj :pointer) (val :uint))  
+    (defcfun "counter_get_counter_o" :uint (obj :pointer)) 
 
 Note that all the getter and setter functions replace '_' with '-', as
 per the CFFI rules.  Use `counter-new` to create a new `counter`
