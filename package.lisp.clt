@@ -7,6 +7,12 @@
 (defpackage #:verilated-<%= @ module-name %>
   (:use #:cl #:cffi)
   (:export #:<%= @ module-name %>-new
+           #:<%= @ module-name %>-trace
+  	   #:traceEverOn
+	   #:VerilatedVcdC-new
+	   #:VerilatedVcdC-open
+	   #:VerilatedVcdC-dump
+	   #:VerilatedVcdC-close
 	   #:<%= @ module-name %>-eval <% (loop for line in (@ input-lines) do %>
 	   #:<%= @ module-name %>-set-<%= (substitute #\- #\_ (cadr (cl-ppcre:split "[\\(,]" line))) %><% ) %><% (loop for line in (@ output-lines) do %>
 	   #:<%= @ module-name %>-get-<%= (substitute #\- #\_ (cadr (cl-ppcre:split "[\\(,]" line))) %><% ) %>))
@@ -18,7 +24,14 @@
 
 (use-foreign-library lib<%= @ module-name %>)
 
+(defcfun "traceEverOn" :void (c :uint))
+(defcfun "VerilatedVcdC_new" :pointer)
+(defcfun "VerilatedVcdC_open" :void (tfp :pointer) (filename :string))
+(defcfun "VerilatedVcdC_dump" :void (tfp :pointer) (num :uint))
+(defcfun "VerilatedVcdC_close" :void (tfp :pointer))
+
 (defcfun "<%= @ module-name %>_new" :pointer)
+(defcfun "<%= @ module-name %>_trace" :void (c :pointer) (tfp :pointer) (num :uint))
 (defcfun "<%= @ module-name %>_eval" :void (c :pointer)) <% (loop for line in (@ input-lines) do %>
 (defcfun "<%= @ module-name %>_set_<%= (cadr (cl-ppcre:split "[\\(,]" line)) %>" :void (obj :pointer) (val :uint)) <% ) %> <% (loop for line in (@ output-lines) do %>
 (defcfun "<%= @ module-name %>_get_<%= (cadr (cl-ppcre:split "[\\(,]" line)) %>" :uint (obj :pointer)) <% ) %>

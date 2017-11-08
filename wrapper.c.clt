@@ -20,6 +20,11 @@ void CAT(MODULE,_eval) (void *obj)
   ((CAT(V,MODULE) *)obj)->eval();
 }
 
+void CAT(MODULE,_trace) (void *obj, void *tfp, unsigned value)
+{
+  ((CAT(V,MODULE) *)obj)->trace((VerilatedVcdC *)tfp, value);
+}
+
 #undef VL_IN
 #undef VL_IN8
 #undef VL_IN16
@@ -47,4 +52,30 @@ void CAT(MODULE,_eval) (void *obj)
       <%= line %> <% ) %>
   <% (loop for line in (@ output-lines) do %>
       <%= line %> <% ) %>
+
+void traceEverOn(int x)
+{
+  Verilated::traceEverOn(!x ? false : true);
+}
+
+void * VerilatedVcdC_new ()
+{
+  return new VerilatedVcdC;
+}
+
+void VerilatedVcdC_open (void *tfp, char *filename)
+{
+  ((VerilatedVcdC *)tfp)->open(filename);
+}
+
+void VerilatedVcdC_dump (void *tfp, unsigned num)
+{
+  ((VerilatedVcdC *)tfp)->dump(num);
+}
+
+void VerilatedVcdC_close (void *tfp)
+{
+  ((VerilatedVcdC *)tfp)->close();
+}
+
 }
