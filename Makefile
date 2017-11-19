@@ -3,6 +3,7 @@ wrapilator: *.asd *.lisp *.clt Makefile
 		--asdf-path `pwd`/.. \
 		--asdf-tree ~/quicklisp/dists/quicklisp/software \
 		--load-system wrapilator \
+		--compress-core \
 		--entry "wrapilator:main"
 
 clean:
