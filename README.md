@@ -9,17 +9,15 @@ Lisp package that talks to those stubs via [CFFI](https://common-lisp.net/projec
 ## Installation
 
 Wrapilator has been developed and tested with [sbcl](http://sbcl.org)
-on Linux ([Fedora](https://getfedora.org)), and requires the use of
-[quicklisp](https://www.quicklisp.org) to download dependencies.  Run
-`make` to generate a stand-alone binary executable for wrapilator.
-The build process requires the
-[`buildapp`](https://www.xach.com/lisp/buildapp/) program from
-quicklisp.
+on Linux ([Fedora](https://getfedora.org)).  The build process
+requires the use of [`ocicl`](https://github.com/ocicl/ocicl) for
+systems management.  Run `make` to generate a stand-alone binary
+executable for wrapilator.
 
 ## Usage
 
     $ wrapilator
-    wrapilator - copyright (C) 2017 Anthony Green <green@moxielogic.com>
+    wrapilator - copyright (C) 2017, 2023 Anthony Green <green@moxielogic.com>
 
     Usage: wrapilator [-h|--help] [-d|--directory OBJ_DIR] module-name
 
@@ -35,11 +33,11 @@ Imagine a simple verilog module, counter.v, that looks like this:
       input rst_i, clk_i;
       output [7:0] counter_o;
       reg [7:0] counter;
-    
+
       assign counter_o = counter;
-       
+
       always @(posedge clk_i) begin
-         if (rst_i) 
+         if (rst_i)
             counter <= 0;
          else
     	counter <= counter + 1;
@@ -59,29 +57,29 @@ The generated lisp code looks like this:
     ;;; verilated-counter.lisp
     ;;;
     ;;; created on Sun Sep 17 08:07:27 2017 by wrapilator.
-    
-    (ql:quickload :cffi)
-    
+
+    (asdf:load-system :cffi)
+
     (defpackage #:verilated-counter
       (:use #:cl #:cffi)
       (:export #:counter-new
-               #:counter-eval 
+               #:counter-eval
                #:counter-set-clk-i
                #:counter-set-rst-i
                #:counter-get-counter-o))
-    
+
     (in-package #:verilated-counter)
-    
+
     (define-foreign-library libcounter
       (t (:default "/home/green/git/example/obj_dir/libcounter")))
-    
+
     (use-foreign-library libcounter)
-    
+
     (defcfun "counter_new" :pointer)
-    (defcfun "counter_eval" :void (c :pointer)) 
-    (defcfun "counter_set_clk_i" :void (obj :pointer) (val :uint)) 
-    (defcfun "counter_set_rst_i" :void (obj :pointer) (val :uint))  
-    (defcfun "counter_get_counter_o" :uint (obj :pointer)) 
+    (defcfun "counter_eval" :void (c :pointer))
+    (defcfun "counter_set_clk_i" :void (obj :pointer) (val :uint))
+    (defcfun "counter_set_rst_i" :void (obj :pointer) (val :uint))
+    (defcfun "counter_get_counter_o" :uint (obj :pointer))
 
 Note that all the getter and setter functions replace '_' with '-', as
 per the CFFI rules.  Use `counter-new` to create a new `counter`
@@ -108,28 +106,28 @@ create a test file that looks like so:
 
     (load "obj_dir/verilated-counter.lisp")
     (use-package :verilated-counter)
-    
+
     ;;; Create a new counter
     (defvar *counter* (counter-new))
-    
+
     (defun tick-clock ()
       (counter-set-clk-i *counter* 1)
       (counter-eval *counter*)
       (counter-set-clk-i *counter* 0)
       (counter-eval *counter*))
-    
+
     ;;; Hold reset high for CYCLES
     (defun reset-cycles (cycles)
       (counter-set-rst-i *counter* 1)
       (loop for i from 1 to cycles do
            (tick-clock))
       (counter-set-rst-i *counter* 0))
-    
+
     (reset-cycles 5)
-      
+
     (loop for i from 1 to 10 do
           (tick-clock))
-    
+
     (format t "counter value is ~A~%" (counter-get-counter-o *counter*))
     (exit)
 
