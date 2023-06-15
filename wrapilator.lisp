@@ -1,6 +1,6 @@
 ;;; wrapilator.lisp
 
-;;; Copyright (C) 2017  Anthony Green <green@moxielogic.com>
+;;; Copyright (C) 2017, 2023  Anthony Green <green@moxielogic.com>
 ;;; Distrubuted under the terms of the MIT license.
 
 (in-package #:wrapilator)
@@ -31,7 +31,7 @@
    :meta-var "OBJ_DIR"))
 
 (defun unknown-option (condition)
-  (format t "warning: ~s option is unknown!~%" (opts:option condition)) 
+  (format t "warning: ~s option is unknown!~%" (opts:option condition))
  (invoke-restart 'opts:skip-option))
 
 (defmacro when-option ((options opt) &body body)
@@ -47,7 +47,7 @@
 
 (defun usage ()
   (opts:describe
-   :prefix "wrapilator - copyright (C) 2017 Anthony Green <green@moxielogic.com>"
+   :prefix "wrapilator - copyright (C) 2017, 2023 Anthony Green <green@moxielogic.com>"
    :suffix "Distributed under the terms of MIT License"
    :usage-of "wrapilator"
    :args     "module-name"))
@@ -55,7 +55,7 @@
 (defun create-wrapper (module-name)
   ;; Sanity checks
   (let ((header (format nil "~A/V~A.h" *directory* module-name)))
-    (if (not (com.gigamonkeys.pathnames:file-exists-p header))
+    (if (not (probe-file header))
 	(format t "fatal: verilator output header file ~A does not exist~%" header)
 	(progn
 	  (with-open-file (stream (format nil "~A/Makefile.wrap" *directory*)
@@ -80,8 +80,8 @@
 				    :if-does-not-exist :create)
 	      (format stream (funcall (cl-template:compile-template *wrapper.c-template*)
 				      (list :module-name module-name :input-lines input-lines :output-lines output-lines)))))))))
-	
-(defun main (args)
+
+(defun main ()
   (multiple-value-bind (options free-args)
 		       (handler-case
 			   (handler-bind ((opts:unknown-option #'unknown-option))

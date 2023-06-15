@@ -1,11 +1,6 @@
 wrapilator: *.asd *.lisp *.clt Makefile
-	buildapp --output wrapilator \
-		--asdf-path `pwd`/.. \
-		--asdf-tree ~/quicklisp/dists/quicklisp/software \
-		--load-system wrapilator \
-		--compress-core \
-		--entry "wrapilator:main"
+	ocicl install
+	sbcl --dynamic-space-size 2560 --eval "(require 'asdf)" --eval "(progn (push (uiop:getcwd) asdf:*central-registry*) (asdf:make :wrapilator) (sb-ext:quit))"
 
 clean:
-	-rm -f wrapilator
-	-rm -f *~
+	-rm -rf wrapilator systems *~
