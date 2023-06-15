@@ -2,7 +2,7 @@
 ;;;
 ;;; created on <%= (local-time:format-timestring nil (local-time:now) :format local-time:+asctime-format+) %> by wrapilator.
 
-(ql:quickload :cffi)
+(asdf:load-system :cffi)
 
 (defpackage #:verilated-<%= @ module-name %>
   (:use #:cl #:cffi)
