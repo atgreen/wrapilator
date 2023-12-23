@@ -64,10 +64,12 @@
 				  :if-does-not-exist :create)
 	    (format stream (funcall (cl-template:compile-template *Makefile-template*)
 				    (list :module-name module-name))))
-	  (let ((input-lines (inferior-shell:run/lines
-			      (format nil "grep -h VL_IN ~A" header)))
-		(output-lines (inferior-shell:run/lines
-			      (format nil "grep -h VL_OUT ~A" header))))
+	  (let ((input-lines (mapcar (lambda (line) (remove #\& line))
+                               (inferior-shell:run/lines
+                                (format nil "grep -h VL_IN ~A" header))))
+          (output-lines (mapcar (lambda (line) (remove #\& line))
+                                (inferior-shell:run/lines
+                                 (format nil "grep -h VL_OUT ~A" header)))))
 	    (with-open-file (stream (format nil "~A/verilated-~A.lisp" *directory* module-name)
 				    :direction :output
 				    :if-exists :supersede

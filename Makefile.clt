@@ -1,5 +1,2 @@
-lib<%= @ module-name %>.so: wrapper.c V<%= @ module-name %>__ALL.a
-	g++ -fPIC -shared -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -I. -o lib<%= @ module-name %>.so wrapper.c -Wl,--whole-archive V<%= @ module-name %>__ALL.a -Wl,--no-whole-archive
-
-V<%= @ module-name %>__ALL.a:
-	M32=-fPIC make -f V<%= @ module-name %>.mk
+lib<%= @ module-name %>.so: wrapper.c
+	g++ -fPIC -shared -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -I. -o lib<%= @ module-name %>.so wrapper.c *.o

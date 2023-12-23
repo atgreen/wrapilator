@@ -2,8 +2,6 @@
 #include "V<%= @ module-name %>.h"
 
 #include <stdio.h>
-#include <verilated.cpp>
-#include <verilated_vcd_c.cpp>
 #include <verilated_vcd_c.h>
 
 #define CAT(a, ...) PRIMITIVE_CAT(a, __VA_ARGS__)
